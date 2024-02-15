@@ -19,12 +19,12 @@ $products = [
     [
         "id" => 4,
         "name" => "Smart Watch 4",
-        "price" => 103
+        "price" => 203
     ],
     [
         "id" => 5,
         "name" => "Smart Watch 5",
-        "price" => 101
+        "price" => 201
     ]
 
 ];
@@ -44,14 +44,51 @@ $products = [
 // ];
 
 if ($_SERVER["REQUEST_METHOD"] == "GET") {
-    // GET ALL PRODUCTS - ENDPOINT #1
-    if (isset($_GET["endpoint"]) && $_GET["endpoint"] == "products") {
-        echo json_encode($products = ["id" => 1]);
-    }
+
 
     // GET SPECIFIC PRODUCT BY ID - ENDPOINT #2
+    if ((isset($_GET["endpoint"]) && $_GET["endpoint"] == "products") && (isset($_GET["id"]))) {
+
+        $productId = $_GET["id"];
+        // echo json_encode($products = ["totla_sales" => 200]);
+        foreach ($products as $product) {
+
+            if ($productId == $product["id"]) {
+                echo json_encode($product);
+                // break; (loop only)
+                exit();
+            }
+        }
+    }
+    // GET SPECIFIC PRODUCT BY Price - ENDPOINT #3
+    // TYPE CASTING
+    if ((isset($_GET["endpoint"]) && $_GET["endpoint"] == "products") && (isset($_GET["price"]))) {
+
+        $productPrice =  (float)$_GET["price"];
+
+        // var_dump($productPrice); //float(300) string(3) "300"
+        // die();
+        $filteredProducts = [];
+        foreach ($products as $product) {
+            if ($product["price"] >= $productPrice) {
+                // var_dump($productPrice >= $product["price"]);
+                // die();
+                $filteredProducts[] = $product;
+
+
+                // echo json_encode($product);
+
+                // exit();
+            }
+        }
+        echo json_encode($filteredProducts);
+        exit();
+    }
+
+    // GET ALL PRODUCTS - ENDPOINT #1
     if (isset($_GET["endpoint"]) && $_GET["endpoint"] == "products") {
-        echo json_encode($products = ["id" => 2]);
+        echo json_encode($products);
+        exit();
     }
 }
 

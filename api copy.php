@@ -1,7 +1,5 @@
 <?php
 
-$api_key = 1234567891;
-
 $products = [
     [
         "id" => 1,
@@ -47,19 +45,21 @@ $products = [
 
 if ($_SERVER["REQUEST_METHOD"] == "GET") {
 
-    if (!isset($_GET["api_key"]) || empty($_GET["api_key"])) {
 
-        $data = ["error" => "Api key not provided."];
-        echo json_encode($data);
-        exit();
+    // GET SPECIFIC PRODUCT BY ID - ENDPOINT #2
+    if ((isset($_GET["endpoint"]) && $_GET["endpoint"] == "products") && (isset($_GET["id"]))) {
+
+        $productId = $_GET["id"];
+        // echo json_encode($products = ["totla_sales" => 200]);
+        foreach ($products as $product) {
+
+            if ($productId == $product["id"]) {
+                echo json_encode($product);
+                // break; (loop only)
+                exit();
+            }
+        }
     }
-
-    if ($_GET["api_key"] != $api_key) {
-        $data = ["error" => "API key invalid"];
-        echo json_encode($data);
-        exit();
-    }
-
 
     if ((isset($_GET["endpoint"]) && $_GET["endpoint"] == "products")) {
 
@@ -86,30 +86,15 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
             echo json_encode($filteredProducts);
             exit();
         }
-
-        // GET SPECIFIC PRODUCT BY ID - ENDPOINT #2
-        if (isset($_GET["id"])) {
-            $productId = $_GET["id"];
-            // echo json_encode($products = ["totla_sales" => 200]);
-            foreach ($products as $product) {
-
-                if ($productId == $product["id"]) {
-                    echo json_encode($product);
-                    // break; (loop only)
-                    exit();
-                }
-            }
-        }
-
-
-
-        // GET ALL PRODUCTS - ENDPOINT #1
-        echo json_encode($products);
-    } else {
-        $data = ["error" => "No Endpoint Found!"];
-        echo json_encode($data);
     }
-} else {
-    $data = ["error" => "Method not allowed"];
-    echo json_encode($data);
+
+    // GET ALL PRODUCTS - ENDPOINT #1
+    if (isset($_GET["endpoint"]) && $_GET["endpoint"] == "products") {
+        echo json_encode($products);
+        exit();
+    }
 }
+
+// echo json_encode($products);
+
+    // $_SERVER
